@@ -36,6 +36,7 @@ public class EnemyBulletPos : MonoBehaviour
 
     // 弾の発射方向の制御するための項目
     [Header("弾の発射方向に関する項目")]
+    [Header("プレイヤーを追尾するかどうか")][SerializeField] private bool _isTracking;
     [Header("回転する弾かどうか")]
     [SerializeField] private bool _isRoatBullet;
     [Header("右回りかどうか")]
@@ -44,8 +45,6 @@ public class EnemyBulletPos : MonoBehaviour
     [Header("弾が振り子のように振れる挙動")]
     [Header("振れるかどうか")]
     [SerializeField] private bool _isShakeBullet;
-    [Header("プレイヤーを中心に振れるかどうか")]
-    [SerializeField] private bool _isPlayerShake;
 
     [Header("回転する速さや開店する時間などの制御項目")]
     [Header("回転するスピード")] [SerializeField] private float _roatSpeed;
@@ -138,12 +137,6 @@ public class EnemyBulletPos : MonoBehaviour
             // ターゲットの位置を確認する
             _toDirection = _tergetObj.transform.position - transform.position;
 
-            //if (_isPlayerShake) {
-
-            //    // オブジェクトのY座標をターゲットの方向に向ける
-            //    transform.rotation = Quaternion.FromToRotation(Vector3.up, _toDirection);
-            //}
-
             // 発射感覚の計測
             _bulletNowTime += Time.deltaTime;
 
@@ -179,14 +172,16 @@ public class EnemyBulletPos : MonoBehaviour
 
         return _toDirection;
     }
+    public bool IsTracking() {
 
+        return _isTracking;
+    }
     public bool IsShake() {
 
         return _isShakeBullet;
     }
+    public float ShakeTime() {
 
-    public bool IsPlayerShake() {
-
-        return _isPlayerShake;
+        return _roatTime;
     }
 }

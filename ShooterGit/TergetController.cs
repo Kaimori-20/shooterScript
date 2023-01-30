@@ -8,16 +8,46 @@ public class TergetController : MonoBehaviour
 
     [SerializeField] private EnemyBulletPos _bulletPos;
 
-    
+    private bool _isTracking;
+
+    private bool _isShake;
+
+    private float _shakeTime;
+
+    private float _shakeTimer;
 
 
     private void Start() {
 
-        IsPlayerTracking();
+        _isTracking = _bulletPos.IsTracking();
+
+        _isShake = _bulletPos.IsShake();
+
+        _shakeTime = _bulletPos.ShakeTime();
     }
 
-    public void IsPlayerTracking() {
+    private void Update() {
 
-        transform.position = _playerObj.transform.position;
+        if (_isTracking) {
+
+            if (_isShake) {
+
+                _shakeTimer += Time.deltaTime;
+
+                if (_shakeTime <= _shakeTimer) {
+
+                    transform.position = _playerObj.transform.position;
+
+                    _shakeTimer = 0;
+                }
+            }
+            else if (!_isShake) {
+
+                transform.position = _playerObj.transform.position;
+            }
+            
+        }
     }
+
+
 }

@@ -8,10 +8,12 @@ public class TrackingObject : MonoBehaviour
     [SerializeField] private EnemyBulletPos _bulletPos;
 
     // プレイヤーのゲームオブジェクト
-    [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _playerObj;
+
+    [SerializeField] private GameObject _terget;
 
     // 追尾するかどうか
-    [SerializeField] private bool _isTracking;
+    private bool _isTracking;
 
     // プレイヤーを中心に振るためのbool
     private bool _isPlayerTracking;
@@ -21,8 +23,9 @@ public class TrackingObject : MonoBehaviour
 
     private void Start() {
 
-        // プレイヤーを中心にするかを決めるためにPosスクリプトから取得
-        _isPlayerTracking = _bulletPos.IsPlayerShake();
+        _isTracking = _bulletPos.IsTracking(); 
+
+        
     }
 
     private void Update() {
@@ -30,7 +33,7 @@ public class TrackingObject : MonoBehaviour
         if (_isTracking) {
 
             // ターゲットの位置を確認する
-            _target = _player.transform.position - transform.position;
+            _target = _playerObj.transform.position - transform.position;
 
             if (!_isPlayerTracking) {
 

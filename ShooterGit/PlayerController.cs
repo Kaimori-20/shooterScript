@@ -19,6 +19,12 @@ public class PlayerController : MonoBehaviour
     // 撃つ感覚
     [SerializeField] private float _bulletInterval;
 
+    // ダメージを受けた時のインターバルタイム
+    [SerializeField] private float _bulletIntervalTime;
+
+    // ダメージを受けた時の無敵時間
+    [SerializeField] private float _mutekiTime;
+
     // 各ステータスの初期値
     // 残機の初期値
     [SerializeField] private int _initialZanki;
@@ -26,6 +32,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int _initialBomb;
     // パワーの初期値
     [SerializeField] private int _initialPower;
+
+    private Animator _anim = null;
+
+    // 各種タグ
+    private string _enemyTag = "Enemy";
+    private string _enemyBulletTag = "EnemyBullet";
+    private string _zankiItemTag = "ZankiItem";
+    private string _bombItemTag = "BombItem";
+    private string _barrierItemTag = "BarrierItem";
+    private string _powerItemTag = "PowerItem";
+    private string _damagePlayertag = "DamagePlayer";
+    private string _playerTag = "Player";
 
     // 残機
     private int _zanki;
@@ -37,7 +55,20 @@ public class PlayerController : MonoBehaviour
     private int _power;
 
     // プレイヤーのバリア状態
-    //private bool _isBarrier;
+    private bool _isBarrier;
+
+    // 無敵時間の計測
+    private float _muteki;
+
+    // ダメージを食らった時のインターバルタイム
+    private float _damageIntervalTimer;
+
+    // 敵の弾が当たったかどうか
+    private bool _isDamage;
+
+    // 無敵かどうか
+    private bool _isMuteki;
+
 
     // 画面外に出ないようにするための変数
     private float _screenTop; // 画面の上
@@ -82,8 +113,42 @@ public class PlayerController : MonoBehaviour
             // 移動する向きとスピードを代入する
             GetComponent<Rigidbody2D>().velocity = direction * _nomalSpeed;
         }
-        
+
+        // ダメージを受けた時の処理
+        if (_isDamage) {
+
+            _damageIntervalTimer += Time.deltaTime;
+
+            // バリアを張っていた場合
+            if (_isBarrier) {
+
+                // バリアを解除する
+                _isBarrier = false;
+            }
+            // 残機が1よりも多い場合
+            else if (_zanki > 1 && !_isBarrier) {
+
+
+            }
+            // 残機が1以下の場合
+            else if (_zanki <= 1 && !_isBarrier) {
+
+                // ゲームオーバーになる
+                _gameManager.GameOver();
+            }
+        }
+
 
     }
 
+    // 何かに触れた時の処理
+    private void OnTriggerEnter2D(Collider2D collision) {
+
+        // 入ってきたのが敵もしくは敵の弾だったら
+        if (collision.tag == _enemyBulletTag　|| collision.tag == _enemyTag) {
+
+            // ダメージを受けたフラグをオンにする
+            _isDamage = true;
+        }
+    }
 }

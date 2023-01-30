@@ -13,7 +13,8 @@ public class GameManager : MonoBehaviour
     // 時間経過によって出現する敵のパターンの順番
     [SerializeField] private List<GameObject> _timeLapseObjects;
 
-    
+    // ゲームオーバーになったかどうか
+    private bool _isGameOver;
 
     // 画面外に出た判定をとるのに使用
     private float _screenTop; // 画面の上
@@ -56,5 +57,10 @@ public class GameManager : MonoBehaviour
     public float ScreenLeft() {
 
         return _screenLeft;
+    }
+
+    public void GameOver() {
+
+        _isGameOver = true;
     }
 }
