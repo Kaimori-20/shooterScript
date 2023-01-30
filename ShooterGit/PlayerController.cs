@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     // ゲームマネージャーのスクリプトをとる
     [SerializeField] private GameManager _gameManager;
 
+    
+
     // 通常時のプレイヤーの移動速度
     [SerializeField] private float _nomalSpeed;
 
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _bulletInterval;
 
     // ダメージを受けた時のインターバルタイム
-    [SerializeField] private float _bulletIntervalTime;
+    [SerializeField] private float _damageIntervalTime;
 
     // ダメージを受けた時の無敵時間
     [SerializeField] private float _mutekiTime;
@@ -63,6 +65,11 @@ public class PlayerController : MonoBehaviour
     // ダメージを食らった時のインターバルタイム
     private float _damageIntervalTimer;
 
+    // プレイヤーの移動速度
+    private float _playerSpeed;
+
+    
+
     // 敵の弾が当たったかどうか
     private bool _isDamage;
 
@@ -90,34 +97,50 @@ public class PlayerController : MonoBehaviour
         _bomb = _initialBomb; // ボムの初期設定
         _power = _initialPower; // パワーの初期値
 
-
+        
     }
 
     private void Update() {
+
+        
+
         // 上下左右に動くキーの設定
         // 左右
         float horizontalKey = Input.GetAxisRaw("Horizontal");
         // 上下
         float verticalKey = Input.GetAxisRaw("Vertical");
 
-        // 移動する向きを決める
-        Vector2 direction = new Vector2(horizontalKey, verticalKey).normalized;
+        // ダメージを受けていないとき
+        if (!_isDamage) {
 
-        if (Input.GetKey(KeyCode.LeftShift)){
-
-            // 移動する向きとスピードを代入する
-            GetComponent<Rigidbody2D>().velocity = direction * _slowSpeed;
-        } 
-        else {
+            // 移動する向きを決める
+            Vector2 direction = new Vector2(horizontalKey, verticalKey).normalized;
 
             // 移動する向きとスピードを代入する
-            GetComponent<Rigidbody2D>().velocity = direction * _nomalSpeed;
+            GetComponent<Rigidbody2D>().velocity = direction * _playerSpeed;
+
+            if (Input.GetKey(KeyCode.LeftShift)) {
+
+                // プレイヤーのスピードをゆっくりにする
+                _playerSpeed = _slowSpeed;                
+            } else {
+
+                // プレイヤーのスピードをはやくする
+                _playerSpeed = _nomalSpeed;
+            }
         }
+
+        
 
         // ダメージを受けた時の処理
         if (_isDamage) {
 
             _damageIntervalTimer += Time.deltaTime;
+
+            // その場に止まる
+            GetComponent<Rigidbody2D>().velocity = transform.position * _playerSpeed;
+
+            _playerSpeed = 0;
 
             // バリアを張っていた場合
             if (_isBarrier) {
@@ -128,13 +151,19 @@ public class PlayerController : MonoBehaviour
             // 残機が1よりも多い場合
             else if (_zanki > 1 && !_isBarrier) {
 
-
+                // 残機を一つ減らす
+                _zanki -= 1;
             }
             // 残機が1以下の場合
             else if (_zanki <= 1 && !_isBarrier) {
 
                 // ゲームオーバーになる
                 _gameManager.GameOver();
+            }
+
+            if (_damageIntervalTimer >= _damageIntervalTime) {
+
+                _isDamage = false;
             }
         }
 
