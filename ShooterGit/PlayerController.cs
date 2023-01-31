@@ -87,6 +87,10 @@ public class PlayerController : MonoBehaviour
 
     private void Start() {
 
+        _anim = GetComponent<Animator>();
+
+        _anim.SetBool("isDamage", false);
+
         // 画面端の座標をGameManagerからとる
         _screenTop = _gameManager.ScreenTop();
         _screenUnder = _gameManager.ScreenUnder();
@@ -151,11 +155,15 @@ public class PlayerController : MonoBehaviour
             // 残機が1よりも多い場合
             else if (_zanki > 1 && !_isBarrier) {
 
+                _anim.SetBool("isDamage", true);
+
                 // 残機を一つ減らす
                 _zanki -= 1;
             }
             // 残機が1以下の場合
             else if (_zanki <= 1 && !_isBarrier) {
+
+                _anim.SetBool("isDamage", true);
 
                 // ゲームオーバーになる
                 _gameManager.GameOver();
@@ -179,5 +187,10 @@ public class PlayerController : MonoBehaviour
             // ダメージを受けたフラグをオンにする
             _isDamage = true;
         }
+    }
+
+    public bool IsDamage() {
+
+        return _isDamage;
     }
 }

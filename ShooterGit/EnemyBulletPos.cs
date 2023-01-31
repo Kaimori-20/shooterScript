@@ -28,6 +28,7 @@ public class EnemyBulletPos : MonoBehaviour
     // íeÇÃî≠éÀêÊ
     [SerializeField] private GameObject _tergetObj;
 
+
     [Header("íeÇÃë¨ìx")]
     [SerializeField] private float _bulletSpeed;
 
@@ -64,7 +65,7 @@ public class EnemyBulletPos : MonoBehaviour
     private float _timerReset = 0;
 
     // Ç‚ÇÁÇÍÇΩÇ©Ç«Ç§Ç©
-    private bool _isDead;
+    public bool _isDead;
 
     private void Awake() {
 
@@ -183,5 +184,10 @@ public class EnemyBulletPos : MonoBehaviour
     public float ShakeTime() {
 
         return _roatTime;
+    }
+
+    public void IsDeadFalse() {
+
+        _isDead = false;
     }
 }

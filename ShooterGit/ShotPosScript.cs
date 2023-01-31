@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ShotPosScript : MonoBehaviour
 {
+    [SerializeField] private PlayerController _player;
+
     // オブジェクトプールスクリプトを取得
     [SerializeField] private ObjectPool _objectPool;
 
@@ -16,12 +18,14 @@ public class ShotPosScript : MonoBehaviour
     // 左右から出す弾かどうか
     [SerializeField] private bool _isPosSide;
 
-    
+    private bool _isDamage;
 
     // 弾を出しているかどうか
     private bool _isShot;
 
     private void Start() {
+
+        _isDamage = false;
 
         // まだ弾を出していないためfalse
         _isShot = false;
@@ -29,9 +33,11 @@ public class ShotPosScript : MonoBehaviour
 
     private void Update() {
 
+        _isDamage = _player.IsDamage();
+
         // Zキーが押されたら弾が発射され、話したら弾が止まる処理
         // Zキーを押したら弾が発射される
-        if (Input.GetKeyDown(KeyCode.Z) && !_isShot) {
+        if (Input.GetKeyDown(KeyCode.Z) && !_isShot && !_isDamage) {
 
             // 弾を出すコルーチンの開始
             StartCoroutine(Shot());
@@ -64,4 +70,6 @@ public class ShotPosScript : MonoBehaviour
         yield break;
 
     }
+
+    
 }

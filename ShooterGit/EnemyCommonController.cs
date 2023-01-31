@@ -12,6 +12,8 @@ public class EnemyCommonController : MonoBehaviour
     // 敵のゲームオブジェクト取得
     [SerializeField] private GameObject _enemy;
 
+    [SerializeField] private GameObject _enemyBulletPos;
+
     // 敵の弾のオブジェクトプール取得
     [SerializeField] private EnemyBulletPool _bulletPool;
 
@@ -24,8 +26,11 @@ public class EnemyCommonController : MonoBehaviour
     // プレイヤーのゲームオブジェクト
     [SerializeField] private GameObject _playerObj;
 
+
     // プレイヤーの弾のタグをとる
     private string _playerBullet = "PlayerBullet";
+
+    private float _enemyNowHp;
 
     // やられたかどうか
     private bool _isDead;
@@ -39,13 +44,16 @@ public class EnemyCommonController : MonoBehaviour
     private void Update() {
 
         // 体力が0以下になったら
-        if (_enemyHp <= 0) {
+        if (_enemyNowHp <= 0) {
 
             // やられた判定をとる
             _isDead = true;
 
+
             // 非表示にする
             this.gameObject.SetActive(false);
+
+
         }
     }
 
@@ -56,7 +64,7 @@ public class EnemyCommonController : MonoBehaviour
         if (collision.tag == _playerBullet) {
 
             // 体力を減らす
-            _enemyHp--;
+            _enemyNowHp--;
         }
     }
 
@@ -64,6 +72,19 @@ public class EnemyCommonController : MonoBehaviour
     public bool IsDead() {
 
         return _isDead;
+
+        
     }
 
+    public void Resurrection() {
+
+        _isDead = false;
+
+        _bulletPos.IsDeadFalse();
+
+        _enemyBulletPos.SetActive(true);
+
+        _enemyNowHp = _enemyHp;
+
+    }
 }

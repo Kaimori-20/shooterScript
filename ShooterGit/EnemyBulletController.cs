@@ -92,7 +92,7 @@ public class EnemyBulletController : MonoBehaviour
 
         if (_isShot) {
 
-            // 
+            // 弾の発射時間の計測
             _bulletTime += Time.deltaTime;
 
             // 弾の発射
@@ -127,10 +127,10 @@ public class EnemyBulletController : MonoBehaviour
     // 発射地点のスクリプトから飛ばす方向取得
     public void CurrentPlayer() {
 
-        // プレイヤーの位置を確認する
+        // ターゲットの位置を確認する
         Vector3 toDirection = _bulletPos.Direction();
 
-        // オブジェクトのY座標をプレイヤーのいる向きに向ける
+        // オブジェクトのY座標をターゲットのいる向きに向ける
         transform.rotation = Quaternion.FromToRotation(Vector3.up, toDirection);
     }
 
